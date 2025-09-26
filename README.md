@@ -13,7 +13,7 @@ Este é um **player IPTV web** moderno, estilo app, que roda diretamente no nave
 ## Como usar
 
 1. Abra o GitHub Pages do repositório no navegador:  
-[phttps://danielstos07.github.io/myiptv/](https://danielstos07.github.io/Next-IPTV/)
+https://danielstos07.github.io/Next-IPTV/
 2. Toque nos cards para reproduzir os canais/filmes.  
 3. Pode adicionar o site à Tela de Início para abrir como um app.  
 
