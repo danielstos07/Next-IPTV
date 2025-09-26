@@ -1,4 +1,4 @@
-# My IPTV App
+# Next-IPTV App
 
 Este é um **player IPTV web** moderno, estilo app, que roda diretamente no navegador (GitHub Pages) e pode ser adicionado à tela de início do iPhone como um "app".  
 
