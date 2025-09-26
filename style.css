@@ -1,114 +1,35 @@
 /* Reset básico */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin:0; padding:0; box-sizing:border-box; font-family: sans-serif; }
+body { background:#121212; color:#fff; }
 
-body {
-  font-family: 'Segoe UI', 'Roboto', sans-serif;
-  background: #1e1e2f;
-  color: #fff;
-  padding: 16px;
-}
+/* Header */
+header { padding:20px; text-align:center; background:#1f1f1f; }
+header h1 { font-size:2em; }
+header small { display:block; margin-top:5px; color:#bbb; }
 
-header {
-  text-align: center;
-  margin-bottom: 16px;
-}
+/* Input M3U */
+.m3uInputContainer { display:flex; justify-content:center; padding:15px; gap:10px; }
+.m3uInputContainer input { width:60%; padding:10px; border-radius:5px; border:none; outline:none; }
+.m3uInputContainer button { padding:10px 15px; border:none; border-radius:5px; background:#ff3c3c; color:#fff; cursor:pointer; }
 
-header h1 {
-  font-size: 28px;
-}
+/* Video */
+video { width:100%; max-height:300px; background:#000; margin-bottom:20px; }
 
-header small {
-  font-size: 14px;
-  color: #aaa;
-}
+/* Categoria */
+.categorySection { margin-bottom:30px; padding:0 20px; }
+.categorySection h2 { font-size:1.5em; margin-bottom:10px; color:#ff3c3c; }
 
-/* Player de vídeo */
-video {
-  width: 100%;
-  max-height: 250px;
-  border-radius: 12px;
-  margin-bottom: 16px;
-  background: #000;
-}
+/* Scroll horizontal dos cards */
+.category { display:flex; overflow-x:auto; gap:15px; padding-bottom:10px; scroll-behavior:smooth; }
+.category::-webkit-scrollbar { height:8px; }
+.category::-webkit-scrollbar-thumb { background:#ff3c3c; border-radius:4px; }
 
-/* Seções de categoria */
-.categorySection {
-  margin-bottom: 24px;
-}
+/* Card */
+.card { flex:0 0 180px; background:#1f1f1f; border-radius:10px; overflow:hidden; text-align:center; transition: transform 0.2s; }
+.card:hover { transform: scale(1.05); }
+.card img { width:100%; height:100px; object-fit:cover; }
+.cardName { padding:5px; font-size:0.9em; height:40px; overflow:hidden; }
 
-.categorySection h2 {
-  margin-bottom: 8px;
-  font-size: 20px;
-  color: #ff6b6b;
-}
-
-/* Container horizontal scroll */
-.category {
-  display: flex;
-  overflow-x: auto;
-  gap: 12px;
-  padding-bottom: 12px;
-}
-
-/* Cards de canal/filme */
-.card {
-  min-width: 120px;
-  background: #2c2c3c;
-  border-radius: 8px;
-  text-align: center;
-  padding: 8px;
-  flex-shrink: 0;
-  transition: transform 0.2s;
-}
-
-.card:hover {
-  transform: scale(1.05);
-}
-
-.card img {
-  width: 100%;
-  border-radius: 6px;
-  margin-bottom: 6px;
-}
-
-.cardName {
-  font-size: 14px;
-  margin-bottom: 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.card button {
-  background-color: #ff6b6b;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 6px;
-  font-size: 12px;
-  cursor: pointer;
-  width: 100%;
-  transition: background 0.2s;
-}
-
-.card button:hover {
-  background-color: #ff4c4c;
-}
-
-/* Scrollbar estilizado */
-.category::-webkit-scrollbar {
-  height: 6px;
-}
-
-.category::-webkit-scrollbar-track {
-  background: #1e1e2f;
-}
-
-.category::-webkit-scrollbar-thumb {
-  background: #ff6b6b;
-  border-radius: 3px;
-}
+/* Botão do card */
+.card button { margin:5px 0 10px 0; padding:5px 10px; background:#ff3c3c; border:none; border-radius:5px; color:#fff; cursor:pointer; width:80%; transition: 0.2s; }
+.card button:hover { background:#ff1f1f; }
