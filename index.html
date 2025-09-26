@@ -33,11 +33,10 @@
   <script src="core.js"></script>
 
   <script>
-    // Evento do botão para carregar M3U Plus
     document.getElementById('loadM3UBtn').addEventListener('click', () => {
       const url = document.getElementById('m3uUrl').value.trim();
       if (!url) return alert('Cole a URL do M3U');
-      loadM3UPlusFromURL(url); // função do core.js
+      loadM3UPlusFromURL(url);
     });
   </script>
 </body>
