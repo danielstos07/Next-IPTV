@@ -14,10 +14,25 @@
 
   <main id="mainContent">
     <video id="video" controls playsinline webkit-playsinline></video>
+
+    <!-- Input para M3U -->
+    <div class="m3uInputContainer">
+      <input type="text" id="m3uUrl" placeholder="Cole a URL do M3U aqui">
+      <button id="loadM3UBtn">Carregar playlist</button>
+    </div>
+
     <div id="categories"></div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="core.js"></script>
+  <script>
+    // Evento do botão
+    document.getElementById('loadM3UBtn').addEventListener('click', ()=>{
+      const url = document.getElementById('m3uUrl').value.trim();
+      if (!url) return alert('Cole a URL do M3U');
+      loadM3UFromURL(url); // chama a função do core.js
+    });
+  </script>
 </body>
 </html>
