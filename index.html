@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My IPTV Player</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>My IPTV Player</h1>
+
+    <div>
+      <label for="m3uUrl">Cole a URL do arquivo M3U:</label>
+      <input type="text" id="m3uUrl" placeholder="https://exemplo.com/playlist.m3u">
+      <button id="loadM3UUrl">Carregar URL</button>
+    </div>
+
+    <div>
+      <label for="m3uFile">Ou envie um arquivo M3U:</label>
+      <input type="file" id="m3uFile" accept=".m3u,.m3u8">
+    </div>
+
+    <div>
+      <button id="loadSample">Carregar exemplo</button>
+      <button id="clearList">Limpar lista</button>
+    </div>
+  </header>
+
+  <main>
+    <video id="video" controls playsinline webkit-playsinline></video>
+    <ul id="channels"></ul>
+    <small id="note">Use playlists HLS (.m3u8) para melhor compatibilidade.</small>
+  </main>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="core.js"></script>
+</body>
+</html>
