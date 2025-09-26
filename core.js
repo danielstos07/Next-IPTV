@@ -1,9 +1,8 @@
 const video = document.getElementById('video');
-const channelsEl = document.getElementById('channels');
-const note = document.getElementById('note');
+const categoriesEl = document.getElementById('categories');
 let hls = null;
 
-// Função para reproduzir stream
+// ---------- Função para reproduzir stream ----------
 function playStream(url) {
     if (!url) return alert('URL inválida');
 
@@ -26,97 +25,58 @@ function playStream(url) {
     }
 }
 
-// Função para atualizar nota/aviso
-function setNote(msg) {
-    note.textContent = msg;
-}
+// ---------- Função para renderizar categorias ----------
+function renderCategories(data) {
+    categoriesEl.innerHTML = '';
+    for (const category in data) {
+        const catDiv = document.createElement('div');
+        catDiv.className = 'categorySection';
 
-// Parse M3U para array de canais
-function parseM3U(text) {
-    const lines = text.split(/\r?\n/).map(l => l.trim());
-    const list = [];
-    for (let i=0; i<lines.length; i++) {
-        const line = lines[i];
-        if (line.startsWith('#EXTINF')) {
-            const commaIdx = line.indexOf(',');
-            const name = commaIdx > -1 ? line.substring(commaIdx+1).trim() : line;
-            let j = i + 1;
-            while (j < lines.length && lines[j].startsWith('#')) j++;
-            if (j < lines.length && lines[j]) {
-                list.push({name, url: lines[j]});
-                i = j;
-            }
-        }
+        const catTitle = document.createElement('h2');
+        catTitle.textContent = category;
+        catDiv.appendChild(catTitle);
+
+        const cardsContainer = document.createElement('div');
+        cardsContainer.className = 'category';
+        
+        data[category].forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            const img = document.createElement('img');
+            img.src = item.thumb || 'https://via.placeholder.com/120x80?text=No+Image';
+            img.alt = item.name;
+            card.appendChild(img);
+            
+            const name = document.createElement('div');
+            name.textContent = item.name;
+            name.className = 'cardName';
+            card.appendChild(name);
+            
+            const btn = document.createElement('button');
+            btn.textContent = '▶ Assistir';
+            btn.addEventListener('click', () => playStream(item.url));
+            card.appendChild(btn);
+
+            cardsContainer.appendChild(card);
+        });
+
+        catDiv.appendChild(cardsContainer);
+        categoriesEl.appendChild(catDiv);
     }
-    return list;
 }
 
-// Renderiza lista de canais
-function renderChannels(list) {
-    channelsEl.innerHTML = '';
-    if (!list.length) {
-        channelsEl.innerHTML = '<li>Nenhum canal encontrado</li>';
-        return;
-    }
-    list.forEach(ch => {
-        const li = document.createElement('li');
-        const title = document.createElement('div');
-        title.style.fontSize = '14px';
-        title.style.marginBottom = '8px';
-        title.textContent = ch.name;
-        const btn = document.createElement('button');
-        btn.className = 'playbtn';
-        btn.textContent = '▶︎ Assistir';
-        btn.addEventListener('click', () => playStream(ch.url));
-        li.appendChild(title);
-        li.appendChild(btn);
-        channelsEl.appendChild(li);
-    });
-}
+// ---------- JSON de exemplo ----------
+const sampleData = {
+    "TV": [
+        {"name": "Canal Teste 1", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "thumb": "https://via.placeholder.com/120x80?text=Canal+1"},
+        {"name": "Canal Teste 2", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "thumb": "https://via.placeholder.com/120x80?text=Canal+2"}
+    ],
+    "Filmes": [
+        {"name": "Filme Teste 1", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "thumb": "https://via.placeholder.com/120x80?text=Filme+1"},
+        {"name": "Filme Teste 2", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "thumb": "https://via.placeholder.com/120x80?text=Filme+2"}
+    ]
+};
 
-// ---------------- Eventos -----------------
-
-// Carregar URL M3U
-document.getElementById('loadM3UUrl').addEventListener('click', ()=>{
-    const url = document.getElementById('m3uUrl').value.trim();
-    if (!url) return alert('Cole a URL do M3U');
-
-    setNote('Carregando playlist...');
-    fetch(url).then(r => {
-        if(!r.ok) throw new Error('Falha HTTP '+r.status);
-        return r.text();
-    }).then(text => {
-        const list = parseM3U(text);
-        renderChannels(list);
-        setNote('Playlist carregada via URL.');
-    }).catch(err => {
-        console.error(err);
-        alert('Erro ao carregar M3U: '+err.message);
-    });
-});
-
-// Carregar arquivo M3U do dispositivo
-document.getElementById('m3uFile').addEventListener('change', (e)=>{
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-        const list = parseM3U(evt.target.result);
-        renderChannels(list);
-        setNote('Playlist carregada do arquivo.');
-    };
-    reader.readAsText(file);
-});
-
-// Botão de exemplo
-document.getElementById('loadSample').addEventListener('click', ()=>{
-    const sample = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
-    playStream(sample);
-    setNote('Reproduzindo stream de teste.');
-});
-
-// Limpar lista
-document.getElementById('clearList').addEventListener('click', ()=>{
-    channelsEl.innerHTML = '';
-    setNote('Lista limpa.');
-});
+// ---------- Renderiza a amostra ----------
+renderCategories(sampleData);
