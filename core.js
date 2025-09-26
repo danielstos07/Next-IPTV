@@ -31,45 +31,6 @@ function setNote(msg) {
     note.textContent = msg;
 }
 
-// ---------- Parse M3U ----------
-function parseM3U(text) {
-    const lines = text.split(/\r?\n/).map(l => l.trim());
-    const list = [];
-    for (let i=0; i<lines.length; i++) {
-        const line = lines[i];
-        if (line.startsWith('#EXTINF')) {
-            const commaIdx = line.indexOf(',');
-            const name = commaIdx > -1 ? line.substring(commaIdx+1).trim() : line;
-            let j = i + 1;
-            while (j < lines.length && lines[j].startsWith('#')) j++;
-            if (j < lines.length && lines[j]) {
-                list.push({name, url: lines[j]});
-                i = j;
-            }
-        }
-    }
-    return list;
-}
-
-// ---------- Mapear canais para categorias e capas ----------
-function mapChannelsToCategories(list) {
-    const categories = { "TV": [], "Filmes": [], "Séries": [], "Outros": [] };
-
-    list.forEach(item => {
-        const nameLower = item.name.toLowerCase();
-        let category = "Outros";
-
-        if (nameLower.match(/movie|filme/)) category = "Filmes";
-        else if (nameLower.match(/serie|show/)) category = "Séries";
-        else if (nameLower.match(/tv|canal|news/)) category = "TV";
-
-        const thumb = "https://via.placeholder.com/120x80?text=" + encodeURIComponent(item.name);
-        categories[category].push({ name: item.name, url: item.url, thumb });
-    });
-
-    return categories;
-}
-
 // ---------- Renderizar categorias e cards ----------
 function renderCategories(data) {
     categoriesEl.innerHTML = '';
@@ -113,6 +74,50 @@ function renderCategories(data) {
     }
 }
 
+// ---------- Parse M3U Plus avançado ----------
+function parseM3UPlusAdvanced(text) {
+    const lines = text.split(/\r?\n/).map(l => l.trim());
+    const list = [];
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line || line.startsWith('#EXTM3U')) continue;
+
+        if (line.startsWith("#EXTINF")) {
+            // Extrair tvg-logo
+            const logoMatch = line.match(/tvg-logo="([^"]+)"/);
+            const thumb = logoMatch ? logoMatch[1] : "https://via.placeholder.com/120x80?text=Canal";
+
+            // Extrair group-title
+            const groupMatch = line.match(/group-title="([^"]+)"/);
+            let category = groupMatch ? groupMatch[1] : "Outros";
+
+            // Extrair nome
+            const commaIndex = line.indexOf(',');
+            const name = commaIndex > -1 ? line.substring(commaIndex + 1).trim() : line;
+
+            // Próxima(s) linha(s) = URL(s)
+            let j = i + 1;
+            while (j < lines.length && lines[j].startsWith('#')) j++;
+            if (j < lines.length && lines[j]) {
+                const urls = [lines[j].trim()]; // array para múltiplos fluxos, se houver
+                list.push({ name, urls, thumb, category });
+                i = j;
+            }
+        }
+    }
+
+    // Mapear para categorias
+    const categories = {};
+    list.forEach(item => {
+        if (!categories[item.category]) categories[item.category] = [];
+        // Pegamos apenas o primeiro link para o player, mas mantém possibilidade de múltiplos
+        categories[item.category].push({ name: item.name, url: item.urls[0], thumb: item.thumb });
+    });
+
+    return categories;
+}
+
 // ---------- JSON de exemplo ----------
 const sampleData = {
     "TV": [
@@ -128,23 +133,20 @@ const sampleData = {
 // ---------- Renderiza a amostra ----------
 renderCategories(sampleData);
 
-// ---------- Carregar M3U via URL ----------
-function loadM3UFromURL(url) {
+// ---------- Carregar M3U Plus via URL com proxy CORS ----------
+function loadM3UPlusFromURL(url) {
     if (!url) return alert('Cole a URL do M3U');
+    const corsProxy = "https://cors-anywhere.herokuapp.com/";
     setNote('Carregando playlist...');
-    fetch(url)
+    fetch(corsProxy + url)
         .then(r => r.text())
         .then(text => {
-            const list = parseM3U(text);
-            const categorized = mapChannelsToCategories(list);
+            const categorized = parseM3UPlusAdvanced(text);
             renderCategories(categorized);
-            setNote('Playlist carregada via URL e organizada em categorias.');
+            setNote('Playlist M3U Plus carregada e organizada!');
         })
         .catch(err => {
             console.error(err);
-            alert('Erro ao carregar M3U: ' + err.message);
+            alert('Erro ao carregar M3U Plus: ' + err.message);
         });
 }
-
-// ---------- Exemplo de uso ----------
-// Você pode chamar loadM3UFromURL('https://link-da-sua-playlist.m3u') no console ou integrar com input
