@@ -3,35 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My IPTV App</title>
+<title>Next-IPTV App</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>My IPTV App</h1>
+    <h1>Next-IPTV App</h1>
     <small>Toque nos cards para assistir</small>
   </header>
 
-  <main id="mainContent">
+  <main id="mainContent" class="appLayout">
+    <!-- Player de vídeo -->
     <video id="video" controls playsinline webkit-playsinline></video>
 
-    <!-- Input para M3U -->
+    <!-- Input para M3U Plus -->
     <div class="m3uInputContainer">
       <input type="text" id="m3uUrl" placeholder="Cole a URL do M3U aqui">
       <button id="loadM3UBtn">Carregar playlist</button>
     </div>
 
+    <!-- Área de categorias -->
     <div id="categories"></div>
   </main>
 
+  <!-- HLS.js para reprodução -->
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+  <!-- Script principal -->
   <script src="core.js"></script>
+
   <script>
-    // Evento do botão
-    document.getElementById('loadM3UBtn').addEventListener('click', ()=>{
+    // Evento do botão para carregar M3U Plus
+    document.getElementById('loadM3UBtn').addEventListener('click', () => {
       const url = document.getElementById('m3uUrl').value.trim();
       if (!url) return alert('Cole a URL do M3U');
-      loadM3UFromURL(url); // chama a função do core.js
+      loadM3UPlusFromURL(url); // função do core.js
     });
   </script>
 </body>
